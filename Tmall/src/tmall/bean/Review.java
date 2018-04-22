@@ -14,7 +14,7 @@ public class Review {
     private int id;
     private User user;
     private Product product;
-    private int content;
+    private String content;
     private Date createDate;
 
     public int getId() {
@@ -41,11 +41,11 @@ public class Review {
         this.product = product;
     }
 
-    public int getContent() {
+    public String getContent() {
         return content;
     }
 
-    public void setContent(int content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
