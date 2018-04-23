@@ -18,8 +18,8 @@ import java.util.List;
 public class ProductImageDAO {
 
     /*静态属性 type_single  type_detail*/
-    private static final String type_single = "type_single";
-    private static final String type_detail = "type_detail";
+    public static final String type_single = "type_single";
+    public static final String type_detail = "type_detail";
 
     /*增加productImage*/
     public void add(ProductImage bean){

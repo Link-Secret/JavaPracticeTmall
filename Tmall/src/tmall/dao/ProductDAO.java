@@ -8,6 +8,7 @@ import java.util.List;
 
 import tmall.bean.Category;
 import tmall.bean.Product;
+import tmall.bean.ProductImage;
 import tmall.bean.User;
 
 import tmall.util.DBUtil;
@@ -131,8 +132,39 @@ public class ProductDAO {
         }
     }
 
-    public void setFirstProductImage(Product firstProductImage) {
-       // this.firstProductImage = firstProductImage;
+    /**
+     * @Description:
+     * @Author.Time:    zjl 2018/4/23 10:01
+    */
+    public void setFirstProductImage(Product p) {
+        /*查询出所有类型为type_single的图片*/
+        List<ProductImage> pis = new ProductImageDAO().list(p, ProductImageDAO.type_single);
+        if(!pis.isEmpty()) {
+            /*默认设置第一张类型为type_single的图片为第一张产品图片*/
+            p.setFirstProductImage(pis.get(0));
+        }
+    }
+
+    /**
+     * @Description:    为产品设置销量
+     * @Author.Time:    zjl 2018/4/23 10:11
+    */
+    public  void setSaleAndReviewNumber(Product p) {
+        int saleCount = new OrderItemDAO().getSaleCount(p.getId());
+        p.setSaleCount(saleCount);
+
+        int reviewCount = new ReviewDAO().getCount(p.getId());
+        p.setReviewCount(reviewCount);
+    }
+
+    /**
+     * @Description:
+     * @Author.Time:    zjl 2018/4/23 10:15
+    */
+    public void setSaleAndReviewNumber(List<Product> ps) {
+        for(Product p : ps) {
+            setSaleAndReviewNumber(p);
+        }
     }
 
     /* 4. 根据id获取 */
@@ -177,7 +209,11 @@ public class ProductDAO {
         return null;
     }
 
-
+    /**
+     * @Description:
+     * @Author:         zjl
+     * @CreateDate:     2018/4/23 9:06
+    */
     public int getTotal(int cid) {
         int total = 0;
 
@@ -196,13 +232,153 @@ public class ProductDAO {
         return total;
     }
 
-     /**
-      * @Description:
-      * @Author:         zjl
-      * @CreateDate:     2018/4/22 21:28
-     */
-    public void test() {
 
+    /**
+     * @Description:    根据cid来分页
+     * @Author:         zjl
+     * @CreateDate:     2018/4/23 9:12
+    */
+    public List<Product> list(int cid) {
+        return list(cid,0,Short.MAX_VALUE);
+    }
+
+    /**
+     * @Description:
+     * @Author:         zjl
+     * @CreateDate:     2018/4/23 9:14
+    */
+    public List<Product> list(int cid, int start, int count) {
+        List<Product> beans = new ArrayList<Product>();
+        Category category = new CategoryDAO().get(cid);
+        String sql = "select * from Product where cid = ? order by id desc limit ?,? ";
+
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql);) {
+            ps.setInt(1, cid);
+            ps.setInt(2, start);
+            ps.setInt(3, count);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Product bean = new Product();
+                int id = rs.getInt(1);
+                String name = rs.getString("name");
+                String subTitle = rs.getString("subTitle");
+                float orignalPrice = rs.getFloat("orignalPrice");
+                float promotePrice = rs.getFloat("promotePrice");
+                int stock = rs.getInt("stock");
+                Date createDate = DateUtil.t2d( rs.getTimestamp("createDate"));
+
+                bean.setName(name);
+                bean.setSubTitle(subTitle);
+                bean.setOrignalPrice(orignalPrice);
+                bean.setPromotePrice(promotePrice);
+                bean.setStock(stock);
+                bean.setCreateDate(createDate);
+                bean.setId(id);
+                bean.setCategory(category);
+                setFirstProductImage(bean);
+                beans.add(bean);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return beans;
+    }
+
+
+    /**
+     * @Description:    填充
+     * @Author:         zjl
+     * @CreateDate:     2018/4/23 9:22
+    */
+    public void fill(Category c) {
+        List<Product> ps = this.list(c.getId());
+        c.setProducts(ps);
+    }
+
+    /**
+     * @Description:
+     * @Author:         zjl
+     * @CreateDate:     2018/4/23 9:25
+    */
+    public  void fill(List<Category> cs) {
+        for(Category c: cs) {
+            fill(c);
+        }
+    }
+
+    /**
+     * @Description:  一个分类分多行展示产品，这个方法就是填充这个分类，分行填充
+     * @Author.Time:  zjl 2018/4/23 9:30
+    */
+    public  void fillByRow(List<Category> cs) {
+        int productNumberEachRow = 8;
+        for(Category c : cs) {
+            List<Product> products = c.getProducts();
+            /*这个分类的每行的集合*/
+            List<List<Product>> productsByRow = new ArrayList<>();
+            /*从0到这个分类所有的产品数，最后一行如果不足设置的默认产品数*/
+            for (int i =0; i<products.size(); i += productNumberEachRow) {
+                int size = i + productNumberEachRow;
+                /*最后一行的判断*/
+                size = size > products.size() ? products.size() : size;
+                /*每行产品的集合*/
+                List<Product> productsOfEachRow = products.subList(i,size);
+                /*这个分类的每行的集合添加这行产品*/
+                productsByRow.add(productsOfEachRow);
+            }
+            /*每个分类填充这个分类的行的集合*/
+            c.setProductsByRow(productsByRow);
+        }
+    }
+
+
+    /**
+     * @Description:    根据关键字模糊查询
+     * @Author.Time:    zjl 2018/4/23 10:16
+    */
+    public List<Product> search(String keyword,int start, int count) {
+        List<Product> beans = new ArrayList<Product>();
+        if(null == keyword || 0 == keyword.trim().length()) {
+            return beans;
+        }
+        String sql = "select * from product where name like ? limit ?, ?";
+        try (Connection conn = DBUtil.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1,"%" + keyword.trim() + "%");
+            ps.setInt(2,start);
+            ps.setInt(3,count);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Product bean = new Product();
+                int id = rs.getInt(1);
+                int cid = rs.getInt("cid");
+                String name = rs.getString("name");
+                String subTitle = rs.getString("subTitle");
+                float orignalPrice = rs.getFloat("orignalPrice");
+                float promotePrice = rs.getFloat("promotePrice");
+                int stock = rs.getInt("stock");
+                Date createDate = DateUtil.t2d( rs.getTimestamp("createDate"));
+
+                bean.setName(name);
+                bean.setSubTitle(subTitle);
+                bean.setOrignalPrice(orignalPrice);
+                bean.setPromotePrice(promotePrice);
+                bean.setStock(stock);
+                bean.setCreateDate(createDate);
+                bean.setId(id);
+
+                Category category = new CategoryDAO().get(cid);
+                bean.setCategory(category);
+                setFirstProductImage(bean);
+                beans.add(bean);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return beans;
     }
 }
 
