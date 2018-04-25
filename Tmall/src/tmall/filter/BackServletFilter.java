@@ -36,6 +36,7 @@ public class BackServletFilter implements Filter {
             String method = StringUtils.substringAfterLast(uri,"_");
 
             /*转发到对应的Servlet*/
+            /*此时如果有带参数，直接通过request.getparameter调用*/
             request.setAttribute("method",method);
             servletRequest.getRequestDispatcher("/"+servletPath).forward(request,response);
             return;

@@ -1,5 +1,10 @@
 package tmall.servlet;
 
+import tmall.util.Page;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * \* Created with IntelliJ IDEA.
  * \* Author: acer zjl
@@ -30,6 +35,7 @@ public class CategoryServlet extends BaseBackServlet{
 
     @Override
     public String list(HttpServletRequest request, HttpServletResponse response, Page page) {
+
         return null;
     }
 }
