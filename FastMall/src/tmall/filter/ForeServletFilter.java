@@ -73,16 +73,18 @@ public class ForeServletFilter implements Filter {
         request.getServletContext().setAttribute("contextPath",contextPath);
 
         User user = (User) request.getSession().getAttribute("user");
-        int cartTobleItemNumber = 0;
+
+        /*改变top.jsp，即最上面右边的购物车的件数*/
+        int cartTotalItemNumber = 0;
         if(null != user) {
             /*得到当前用户的订单项集合*/
             List<OrderItem> ois = new OrderItemDAO().listByUser(user.getId());
             /*遍历每个订单项，得到购物的总数*/
             for(OrderItem oi : ois) {
-                cartTobleItemNumber += oi.getNumber();
+                cartTotalItemNumber += oi.getNumber();
             }
         }
-        request.setAttribute("cartTobleItemNumber",cartTobleItemNumber);
+        request.setAttribute("cartTotalItemNumber",cartTotalItemNumber);
 
         List<Category> cs = (List<Category>) request.getAttribute("cs");
         if(null == cs) {

@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="FastMall:Web exploded">
-    <output-path>$PROJECT_DIR$/web/WEB-INF/classes</output-path>
+    <output-path>E:/A个人网站/Tencent/war/FastMall</output-path>
     <root id="root">
       <element id="javaee-facet-resources" facet="Fastmall/web/Web" />
       <element id="directory" name="WEB-INF">
@@ -26,6 +26,7 @@
           <element id="library" level="module" name="commons-io-1.4.jar" module-name="Fastmall" />
           <element id="library" level="module" name="servlet-api.jar" module-name="Fastmall" />
           <element id="library" level="module" name="mysql-connector-java-5.0.8-bin.jar" module-name="Fastmall" />
+          <element id="library" level="project" name="lib" />
         </element>
       </element>
     </root>

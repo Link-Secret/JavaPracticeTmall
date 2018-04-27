@@ -60,6 +60,7 @@ public abstract class BaseBackServlet extends HttpServlet {
             String redirect = m.invoke(this,request,response,page).toString();
 
             /*根据返回的字符串进行客户端或者服务端跳转*/
+            /*@客户端跳转*/
             if(redirect.startsWith("@")) {
 
             }

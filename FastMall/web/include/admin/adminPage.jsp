@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8"
 	pageEncoding="UTF-8" isELIgnored="false"%>
 
-	
+<%--公共页面的分页信息--%>
 <script>
 $(function(){
+    /*如果连接不可点，则不能跳转*/
 	$("ul.pagination li.disabled a").click(function(){
 		return false;
 	});
@@ -13,6 +14,7 @@ $(function(){
 
 <nav>
   <ul class="pagination">
+      <%--如果没有前一页，则css样式为disabled--%>
     <li <c:if test="${!page.hasPreviouse}">class="disabled"</c:if>>
       <a  href="?page.start=0${page.param}" aria-label="Previous" >
         <span aria-hidden="true">&laquo;</span>

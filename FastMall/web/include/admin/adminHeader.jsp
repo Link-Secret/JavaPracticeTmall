@@ -13,6 +13,8 @@
 	<link href="css/back/style.css" rel="stylesheet">
 	
 <script>
+/*为空判断，传进来的参数为输入框所在的id，和其name.
+判断用户输入的内容是否为空，如果为空弹窗并聚焦*/
 function checkEmpty(id, name){
 	var value = $("#"+id).val();
 	if(value.length==0){
@@ -23,6 +25,9 @@ function checkEmpty(id, name){
 	}
 	return true;
 }
+/*检查数字，传入参数为数字所在的id，name
+* 如果为空或者不是数字，则弹窗并聚焦，
+* */
 function checkNumber(id, name){
 	var value = $("#"+id).val();
 	if(value.length==0){
@@ -38,6 +43,7 @@ function checkNumber(id, name){
 	
 	return true;
 }
+/*判断输入是否为整数*/
 function checkInt(id, name){
 	var value = $("#"+id).val();
 	if(value.length==0){
@@ -54,7 +60,7 @@ function checkInt(id, name){
 	return true;
 }
 
-
+/*删除按钮确认*/
 $(function(){
 	$("a").click(function(){
 		var deleteLink = $(this).attr("deleteLink");

@@ -45,6 +45,8 @@ $(function(){
 				
 				<tr>
 					<td>${c.id}</td>
+					<%--src="../img/category/${c.id}.jpg并不可行，因为这个页面是服务端跳转，
+					页面还是在web目录下，所以是img/...."--%>
 					<td><img height="40px" src="img/category/${c.id}.jpg"></td>
 					<td>${c.name}</td>
 					 	

@@ -247,8 +247,9 @@ public class ProductDAO {
      
     public void setFirstProductImage(Product p) {
         List<ProductImage> pis= new ProductImageDAO().list(p, ProductImageDAO.type_single);
-        if(!pis.isEmpty())
-            p.setFirstProductImage(pis.get(0));     
+        if(!pis.isEmpty()){
+            p.setFirstProductImage(pis.get(0));
+        }
     }
      
     public void setSaleAndReviewNumber(Product p) {

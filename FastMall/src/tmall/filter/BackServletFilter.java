@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class BackServletFilter implements Filter {
 
+	@Override
 	public void destroy() {
 		
 	}
@@ -25,8 +26,10 @@ public class BackServletFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-		
+
+		/*/FastMall*/
 		String contextPath=request.getServletContext().getContextPath();
+		/*/FastMall/admin_category_list*/
 		String uri = request.getRequestURI();
 		uri =StringUtils.remove(uri, contextPath);
 		if(uri.startsWith("/admin_")){		
@@ -41,6 +44,7 @@ public class BackServletFilter implements Filter {
 	}
 
 
+	@Override
 	public void init(FilterConfig arg0) throws ServletException {
 	
 	}

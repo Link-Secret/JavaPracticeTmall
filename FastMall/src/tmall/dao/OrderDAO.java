@@ -87,10 +87,12 @@ public class OrderDAO {
             ps.setString(3, bean.getReceiver());
             ps.setString(4, bean.getMobile());
             ps.setString(5, bean.getUserMessage());
+
             ps.setTimestamp(6, DateUtil.d2t(bean.getCreateDate()));;
             ps.setTimestamp(7, DateUtil.d2t(bean.getPayDate()));;
             ps.setTimestamp(8, DateUtil.d2t(bean.getDeliveryDate()));;
             ps.setTimestamp(9, DateUtil.d2t(bean.getConfirmDate()));;
+
             ps.setString(10, bean.getOrderCode());
             ps.setInt(11, bean.getUser().getId());
             ps.setString(12, bean.getStatus());

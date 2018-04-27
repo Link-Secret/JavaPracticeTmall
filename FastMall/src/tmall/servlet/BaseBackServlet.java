@@ -46,6 +46,7 @@ public abstract class BaseBackServlet extends HttpServlet {
 	protected ReviewDAO reviewDAO = new ReviewDAO();
 	protected UserDAO userDAO = new UserDAO();
 
+	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			
@@ -70,13 +71,17 @@ public abstract class BaseBackServlet extends HttpServlet {
 			String redirect = m.invoke(this,request, response,page).toString();
 			
 			/*根据方法的返回值，进行相应的客户端跳转，服务端跳转，或者仅仅是输出字符串*/
-			
-			if(redirect.startsWith("@"))
+
+			/*如果是以@开头则客户端跳转 一般为@example_example_example*/
+			if(redirect.startsWith("@")) {
 				response.sendRedirect(redirect.substring(1));
-			else if(redirect.startsWith("%"))
+			/*如果为%开头则不跳转，只打印信息*/
+			} else if(redirect.startsWith("%")) {
 				response.getWriter().print(redirect.substring(1));
-			else
+			/*其余情况下进行服务端跳转*/
+			} else {
 				request.getRequestDispatcher(redirect).forward(request, response);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
