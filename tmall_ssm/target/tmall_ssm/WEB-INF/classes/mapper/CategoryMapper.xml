@@ -6,6 +6,12 @@
 <mapper namespace="com.how2java.tmall.mapper.CategoryMapper">
     <select id="list" resultType="Category">
        SELECT * FROM category ORDER BY id DESC
+       <if test="start != null and count != null">
+           limit #{start} , #{count}
+       </if>
+    </select>
+    <select id="total" resultType="int">
+        SELECT COUNT(*) FROM category
     </select>
     <insert id="add" parameterType="Category">
         INSERT into category(name) VALUES(1234567)

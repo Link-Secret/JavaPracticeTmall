@@ -3,6 +3,7 @@ package com.how2java.tmall.controller;
 import com.how2java.tmall.mapper.CategoryMapper;
 import com.how2java.tmall.pojo.Category;
 import com.how2java.tmall.service.CategoryService;
+import com.how2java.tmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,10 +26,13 @@ public class CategoryController {
     CategoryService categoryService;
 
     @RequestMapping("admin_category_list")
-    public String list(Model model) {
+    public String list(Model model, Page page) {
         /*这个model哪里来的*/
-        List<Category> cs = categoryService.list();
+        List<Category> cs = categoryService.list(page);
+        int total = categoryService.total();
+        page.setTotal(total);
         model.addAttribute("cs",cs);
+        model.addAttribute("page",page);
         return "admin/listCategory";
     }
 
