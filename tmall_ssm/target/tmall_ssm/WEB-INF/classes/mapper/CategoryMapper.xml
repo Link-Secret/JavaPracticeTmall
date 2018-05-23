@@ -13,8 +13,19 @@
     <select id="total" resultType="int">
         SELECT COUNT(*) FROM category
     </select>
-    <insert id="add" parameterType="Category">
-        INSERT into category(name) VALUES(1234567)
-        INSERT INTO category SET VALUES(name = (#NAME))
+    <insert id="add" parameterType="Category" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO category( name ) VALUES(#{name})
     </insert>
+    <!--没有parameterType,param应该是输入的参数-->
+    <delete id="delete">
+        DELETE FROM category where id = #{id}
+    </delete>
+
+    <!--编辑和修改-->
+    <select id="get" resultType="Category">
+        SELECT * FROM category where id = #{id}
+    </select>
+    <update id="update" parameterType="Category">
+        UPDATE category set name = #{name} WHERE id = #{id}
+    </update>
 </mapper>
