@@ -46,7 +46,8 @@
         <property name="dataSource" ref="dataSource"/>
         <!--路径为mapper目录下的.xml后缀的文件 classPath相当于resources？？？？-->
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
-        <!--分页插件，目前先注释，后面重构的时候才会使用
+
+        <!--分页插件，目前先注释，后面重构的时候才会使用-->
         <property name="plugins">
             <array>
                 <bean class="com.github.pagehelper.PageInterceptor">
@@ -57,7 +58,7 @@
                 </bean>
             </array>
         </property>
-        -->
+
     </bean>
 
     <!--Mybatis的Mapper文件识别-->
